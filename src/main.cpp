@@ -67,7 +67,8 @@ int main(void) {
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shader.program());
+		shader.use();
+		
 		vao.bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 

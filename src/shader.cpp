@@ -52,6 +52,10 @@ void Shader::link() {
 	program_ = program;	
 }
 
+void Shader::use() {
+	glUseProgram(program_);
+}
+
 const GLuint & Shader::program() const {
     return program_;
 }

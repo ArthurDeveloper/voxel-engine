@@ -13,6 +13,8 @@ public:
 
     void fromFile(GLuint type, std::string path);
     void link();
+    void use();
+
     const GLuint & program() const;
 
 };
