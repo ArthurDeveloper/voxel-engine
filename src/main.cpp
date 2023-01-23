@@ -4,10 +4,14 @@
 #include <cstring>
 #include <sstream>
 #include <fstream>
+#include "glm/ext/matrix_float4x4.hpp"
 #include "shader.h"
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -26,7 +30,7 @@ int main(void) {
 		0, 1, 3,
 		1, 2, 3
 	};
-	
+
 	if (glfwInit()) {
 		std::cout << "Glfw workin'!\n";
 	}
@@ -76,6 +80,12 @@ int main(void) {
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glm::mat4 translate = glm::mat4(1.0f);
+		translate = glm::rotate(translate, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 1.0f));
+
+		unsigned int transformLoc = glGetUniformLocation(shader.program(), "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(translate));
 
 		shader.use();
 
