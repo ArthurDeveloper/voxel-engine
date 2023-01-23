@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include "shader.h"
+#include "VAO.h"
 #include "VBO.h"
 
 #define WINDOW_WIDTH 640
@@ -44,21 +45,16 @@ int main(void) {
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 
+	VAO vao;
 	VBO vbo;
 
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-
-	glBindVertexArray(VAO);
+	vao.bind();
 
 	vbo.bind();
 	vbo.bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
+	vao.attribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)0);
+	vao.attribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
 	Shader shader;
 
@@ -72,7 +68,7 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shader.program());
-		glBindVertexArray(VAO);
+		vao.bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(window);
