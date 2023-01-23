@@ -4,5 +4,3 @@ CMakeFiles/
 main
 Makefile
 src/VAO.h
-src/VBO.h
-src/VBO.cpp
