@@ -7,6 +7,7 @@
 #include "shader.h"
 #include "VAO.h"
 #include "VBO.h"
+#include "EBO.h"
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -15,12 +16,17 @@
 int main(void) {
 	GLfloat vertices[] = {
 		// Coordinates		 // Colors
-		-0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
-		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,
+		 0.5f,    0.5f, 0.0f,   1.0f, 0.0f, 0.0f,
+		 0.5f,   -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,
+		-0.5f,   -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,
+		-0.5f,    0.5f, 0.0f,   1.0f, 1.0f, 0.0f
+	};
+
+	GLuint indices[] = {
+		0, 1, 3,
+		1, 2, 3
 	};
 	
-
 	if (glfwInit()) {
 		std::cout << "Glfw workin'!\n";
 	}
@@ -47,6 +53,7 @@ int main(void) {
 
 	VAO vao;
 	VBO vbo;
+	EBO ebo;
 
 	vao.bind();
 
@@ -55,6 +62,9 @@ int main(void) {
 
 	vao.attribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)0);
 	vao.attribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+
+	ebo.bind();
+	ebo.bufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	Shader shader;
 
@@ -68,9 +78,10 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.use();
-		
+
 		vao.bind();
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		ebo.bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 
