@@ -4,11 +4,12 @@
 #include <cstring>
 #include <sstream>
 #include <fstream>
-#include "glm/ext/matrix_float4x4.hpp"
+#include <glm/ext/matrix_float4x4.hpp>
 #include "shader.h"
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+#include "Texture.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -19,11 +20,11 @@
 
 int main(void) {
 	GLfloat vertices[] = {
-		// Coordinates		 // Colors
-		 0.5f,    0.5f, 0.0f,   1.0f, 0.0f, 0.0f,
-		 0.5f,   -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,
-		-0.5f,   -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,
-		-0.5f,    0.5f, 0.0f,   1.0f, 1.0f, 0.0f
+		// Coordinates		    // Colors            // Texture
+		 0.5f,    0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+		 0.5f,   -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,    1.0f, 0.0f,
+		-0.5f,   -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+		-0.5f,    0.5f, 0.0f,   1.0f, 1.0f, 0.0f,    0.0f, 1.0f,
 	};
 
 	GLuint indices[] = {
@@ -64,8 +65,9 @@ int main(void) {
 	vbo.bind();
 	vbo.bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
 
-	vao.attribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)0);
-	vao.attribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+	vao.attribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)0);
+	vao.attribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+	vao.attribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
 	ebo.bind();
 	ebo.bufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
@@ -77,6 +79,12 @@ int main(void) {
 
 	shader.link();
 
+	Texture texture("res/textures/grass.png");
+
+	texture.bind();
+	texture.params();
+	texture.build();
+
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -87,10 +95,13 @@ int main(void) {
 		unsigned int transformLoc = glGetUniformLocation(shader.program(), "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(translate));
 
-		shader.use();
+		glActiveTexture(GL_TEXTURE0);
+		texture.bind();
 
+		shader.use();
+		
 		vao.bind();
-		ebo.bind();
+
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
