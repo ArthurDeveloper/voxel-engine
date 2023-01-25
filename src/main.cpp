@@ -18,6 +18,9 @@
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
+glm::vec3 viewPosition = glm::vec3(0.0f, 0.0f, -3.0f);
+
+void handleInputs(GLFWwindow *window);
 
 int main(void) {
 	GLfloat vertices[] = {
@@ -87,6 +90,8 @@ int main(void) {
 	texture.build();
 	
 	while (!glfwWindowShouldClose(window)) {
+		handleInputs(window);
+
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -96,7 +101,7 @@ int main(void) {
 		shader.use();
 
 		glm::mat4 view = glm::mat4(1.0f);
-		view = glm::translate(view, glm::vec3(1.0f, 0.0f, -3.0f));
+		view = glm::translate(view, viewPosition);
 		
 		GLuint viewLocation = glGetUniformLocation(shader.program(), "view");
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
@@ -125,4 +130,11 @@ int main(void) {
 
 	glfwTerminate();
 	return 0;
+}
+
+void handleInputs(GLFWwindow *window) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT) || glfwGetKey(window, GLFW_KEY_A)) viewPosition.x += 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) || glfwGetKey(window, GLFW_KEY_D)) viewPosition.x -= 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_UP) || glfwGetKey(window, GLFW_KEY_W)) viewPosition.z += 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_DOWN) || glfwGetKey(window, GLFW_KEY_S)) viewPosition.z -= 0.1f;
 }
