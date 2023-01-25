@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <glm/ext/matrix_float4x4.hpp>
+#include "glm/ext/matrix_clip_space.hpp"
 #include "shader.h"
 #include "VAO.h"
 #include "VBO.h"
@@ -84,23 +85,36 @@ int main(void) {
 	texture.bind();
 	texture.params();
 	texture.build();
-
+	
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		glm::mat4 translate = glm::mat4(1.0f);
-		translate = glm::rotate(translate, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 1.0f));
-
-		unsigned int transformLoc = glGetUniformLocation(shader.program(), "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(translate));
 
 		glActiveTexture(GL_TEXTURE0);
 		texture.bind();
 
 		shader.use();
+
+		glm::mat4 view = glm::mat4(1.0f);
+		view = glm::translate(view, glm::vec3(1.0f, 0.0f, -3.0f));
 		
+		GLuint viewLocation = glGetUniformLocation(shader.program(), "view");
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+
+		// TODO: Put this outside of the loop to improve performance
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
+
+		GLuint projectionLocation = glGetUniformLocation(shader.program(), "projection");
+		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+
 		vao.bind();
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::rotate(model, (GLfloat)glfwGetTime()*3, glm::vec3(1.0f, -0.3f, 1.0f));
+
+		GLuint modelLocation = glGetUniformLocation(shader.program(), "model");
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
