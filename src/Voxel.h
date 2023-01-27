@@ -26,10 +26,6 @@ public:
 
     void update();
 
-    void bindVAO();
-    void bindTexture();
-   
-    void useShader(); 
     GLuint shaderProgram();
 
 };

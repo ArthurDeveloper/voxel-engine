@@ -76,18 +76,6 @@ void Voxel::update() {
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 }
 
-void Voxel::bindVAO() {
-	vao.bind();
-}
-
-void Voxel::bindTexture() {
-	texture.bind();
-}
-
-void Voxel::useShader() {
-	shader.use();
-}
-
 GLuint Voxel::shaderProgram() {
 	return shader.program();
 }
