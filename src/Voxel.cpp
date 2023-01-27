@@ -44,7 +44,7 @@ Voxel::Voxel() : vertices {
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	}, texture("res/textures/grass.png")
 {
-		vao.bind();
+	vao.bind();
 
 	vbo.bind();
 	vbo.bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
@@ -60,6 +60,20 @@ Voxel::Voxel() : vertices {
 	shader.fromFile(GL_FRAGMENT_SHADER, "res/shaders/triangle.frag");
 
 	shader.link();
+
+	model = glm::mat4(1.0f);
+}
+
+void Voxel::update() {
+	vao.bind();
+
+	glActiveTexture(GL_TEXTURE0);
+	
+	texture.bind();
+	shader.use();
+
+	GLuint modelLocation = glGetUniformLocation(shader.program(), "model");
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 }
 
 void Voxel::bindVAO() {

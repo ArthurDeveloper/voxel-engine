@@ -75,11 +75,6 @@ int main(void) {
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glActiveTexture(GL_TEXTURE0);
-		voxel->bindTexture();
-
-		voxel->useShader();
-
 		glm::mat4 view = glm::mat4(1.0f);
 		view = glm::lookAt(viewPosition, viewPosition + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
 		
@@ -93,13 +88,7 @@ int main(void) {
 		GLuint projectionLocation = glGetUniformLocation(voxel->shaderProgram(), "projection");
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
-		voxel->bindVAO();
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::rotate(model, (GLfloat)glfwGetTime()*3, glm::vec3(1.0f, -0.3f, 1.0f));
-
-		GLuint modelLocation = glGetUniformLocation(voxel->shaderProgram(), "model");
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+		voxel->update();
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
