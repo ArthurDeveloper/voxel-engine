@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <glm/ext/matrix_float4x4.hpp>
+#include "Voxel.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include <glm/vec3.hpp>
 #include "shader.h"
@@ -32,62 +33,12 @@ glm::vec3 viewPosition = glm::vec3(0.0f, 0.0f, -3.0f);
 GLfloat lastX = (GLfloat)WINDOW_WIDTH/2, lastY = (GLfloat)WINDOW_HEIGHT/2;
 GLfloat sensitivity = 0.1f;
 
+Voxel *voxel;
+
 void handleInputs(GLFWwindow *window);
 void mouseCallback(GLFWwindow *window, GLdouble ax, GLdouble ay);
 
 int main(void) {
-
-	
-
-	GLfloat vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-	};
-
-	GLuint indices[] = {
-		0, 1, 3,
-		1, 2, 3
-	};
-
 	if (glfwInit()) {
 		std::cout << "Glfw workin'!\n";
 	}
@@ -111,35 +62,9 @@ int main(void) {
 	}
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
+	voxel = new Voxel();
+
 	glEnable(GL_DEPTH_TEST);
-
-	VAO vao;
-	VBO vbo;
-	EBO ebo;
-
-	vao.bind();
-
-	vbo.bind();
-	vbo.bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
-
-	vao.attribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
-	vao.attribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-
-	ebo.bind();
-	ebo.bufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
-
-	Shader shader;
-
-	shader.fromFile(GL_VERTEX_SHADER, "res/shaders/triangle.vert");
-	shader.fromFile(GL_FRAGMENT_SHADER, "res/shaders/triangle.frag");
-
-	shader.link();
-
-	Texture texture("res/textures/grass.png");
-
-	texture.bind();
-	texture.params();
-	texture.build();
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouseCallback);
@@ -151,29 +76,29 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glActiveTexture(GL_TEXTURE0);
-		texture.bind();
+		voxel->bindTexture();
 
-		shader.use();
+		voxel->useShader();
 
 		glm::mat4 view = glm::mat4(1.0f);
 		view = glm::lookAt(viewPosition, viewPosition + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
 		
-		GLuint viewLocation = glGetUniformLocation(shader.program(), "view");
+		GLuint viewLocation = glGetUniformLocation(voxel->shaderProgram(), "view");
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
 
 		// TODO: Put this outside of the loop to improve performance
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
 
-		GLuint projectionLocation = glGetUniformLocation(shader.program(), "projection");
+		GLuint projectionLocation = glGetUniformLocation(voxel->shaderProgram(), "projection");
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
-		vao.bind();
+		voxel->bindVAO();
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::rotate(model, (GLfloat)glfwGetTime()*3, glm::vec3(1.0f, -0.3f, 1.0f));
 
-		GLuint modelLocation = glGetUniformLocation(shader.program(), "model");
+		GLuint modelLocation = glGetUniformLocation(voxel->shaderProgram(), "model");
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -184,6 +109,9 @@ int main(void) {
 	}
 
 	glfwTerminate();
+
+	delete voxel; 
+
 	return 0;
 }
 
