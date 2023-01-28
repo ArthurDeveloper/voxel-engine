@@ -96,8 +96,7 @@ int main(void) {
 			glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
 			voxel.update();
-
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			voxel.draw();
 		}
 
 		glfwSwapBuffers(window);

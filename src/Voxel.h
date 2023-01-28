@@ -25,6 +25,7 @@ public:
     Voxel();
 
     void update();
+    void draw();
 
     void translate(float x, float y, float z);
 

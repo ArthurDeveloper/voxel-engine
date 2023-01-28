@@ -77,6 +77,10 @@ void Voxel::update() {
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 }
 
+void Voxel::draw() {
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
 void Voxel::translate(float x, float y, float z) {
 	glm::vec3 vec = glm::vec3(x, y, z);
 	model = glm::translate(model, vec);
