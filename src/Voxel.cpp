@@ -1,4 +1,5 @@
 #include "Voxel.h"
+#include "glm/ext/matrix_transform.hpp"
 
 Voxel::Voxel() : vertices {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -74,6 +75,11 @@ void Voxel::update() {
 
 	GLuint modelLocation = glGetUniformLocation(shader.program(), "model");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+}
+
+void Voxel::translate(float x, float y, float z) {
+	glm::vec3 vec = glm::vec3(x, y, z);
+	model = glm::translate(model, vec);
 }
 
 GLuint Voxel::shaderProgram() {

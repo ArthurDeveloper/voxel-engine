@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <initializer_list>
 #include <iostream>
 #include <cstring>
 #include <sstream>
@@ -16,6 +17,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <list>
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -33,7 +35,7 @@ glm::vec3 viewPosition = glm::vec3(0.0f, 0.0f, -3.0f);
 GLfloat lastX = (GLfloat)WINDOW_WIDTH/2, lastY = (GLfloat)WINDOW_HEIGHT/2;
 GLfloat sensitivity = 0.1f;
 
-Voxel *voxel;
+std::list<Voxel> voxels;
 
 void handleInputs(GLFWwindow *window);
 void mouseCallback(GLFWwindow *window, GLdouble ax, GLdouble ay);
@@ -62,7 +64,11 @@ int main(void) {
 	}
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	voxel = new Voxel();
+	for (int i = 0; i < 6; i++) {
+		Voxel v;
+		v.translate(0.0f, 0.0f, i);
+		voxels.push_back(v);
+	}
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -78,19 +84,21 @@ int main(void) {
 		glm::mat4 view = glm::mat4(1.0f);
 		view = glm::lookAt(viewPosition, viewPosition + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
 		
-		GLuint viewLocation = glGetUniformLocation(voxel->shaderProgram(), "view");
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
-
 		// TODO: Put this outside of the loop to improve performance
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
 
-		GLuint projectionLocation = glGetUniformLocation(voxel->shaderProgram(), "projection");
-		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+		for (Voxel voxel : voxels) {
+			GLuint viewLocation = glGetUniformLocation(voxel.shaderProgram(), "view");
+			glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
 
-		voxel->update();
+			GLuint projectionLocation = glGetUniformLocation(voxel.shaderProgram(), "projection");
+			glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			voxel.update();
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 
 		glfwSwapBuffers(window);
 
@@ -98,8 +106,6 @@ int main(void) {
 	}
 
 	glfwTerminate();
-
-	delete voxel; 
 
 	return 0;
 }

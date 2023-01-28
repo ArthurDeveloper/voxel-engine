@@ -26,6 +26,8 @@ public:
 
     void update();
 
+    void translate(float x, float y, float z);
+
     GLuint shaderProgram();
 
 };
