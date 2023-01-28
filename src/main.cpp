@@ -89,11 +89,8 @@ int main(void) {
 		projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
 
 		for (Voxel voxel : voxels) {
-			GLuint viewLocation = glGetUniformLocation(voxel.shaderProgram(), "view");
-			glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
-
-			GLuint projectionLocation = glGetUniformLocation(voxel.shaderProgram(), "projection");
-			glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+			voxel.setMat4("view", view);
+			voxel.setMat4("projection", projection);
 
 			voxel.update();
 			voxel.draw();

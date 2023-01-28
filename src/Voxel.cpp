@@ -81,6 +81,11 @@ void Voxel::draw() {
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
+void Voxel::setMat4(const char *name, glm::mat4 value) {
+	GLuint location = glGetUniformLocation(shader.program(), name);
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+}
+
 void Voxel::translate(float x, float y, float z) {
 	glm::vec3 vec = glm::vec3(x, y, z);
 	model = glm::translate(model, vec);

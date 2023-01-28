@@ -29,6 +29,8 @@ public:
 
     void translate(float x, float y, float z);
 
+    void setMat4(const char *name, glm::mat4 value);
+
     GLuint shaderProgram();
 
 };
