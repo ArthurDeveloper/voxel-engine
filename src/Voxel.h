@@ -31,6 +31,4 @@ public:
 
     void setMat4(const char *name, glm::mat4 value);
 
-    GLuint shaderProgram();
-
 };
