@@ -43,7 +43,7 @@ Voxel::Voxel() : vertices {
 		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-	}, texture("res/textures/grass.png")
+	}, texture("res/textures/grass-top.png")
 {
 	vao.bind();
 
