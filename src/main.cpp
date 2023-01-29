@@ -35,7 +35,7 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 glm::vec3 viewPosition = glm::vec3(0.0f, 0.0f, -3.0f);
 
-Chunk *chunk;
+std::list<Chunk> chunks;
 
 // Relative to mouse
 GLfloat lastX = (GLfloat)WINDOW_WIDTH/2, lastY = (GLfloat)WINDOW_HEIGHT/2;
@@ -69,7 +69,8 @@ int main(void) {
 	}
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	chunk = new Chunk(64);
+	chunks.push_back(Chunk(64));
+	chunks.push_back(Chunk(64, glm::vec3(10.0f, 10.0f, 10.0f)));
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -89,12 +90,14 @@ int main(void) {
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
 
-		for (Voxel voxel : chunk->voxels()) {
-			voxel.setMat4("view", view);
-			voxel.setMat4("projection", projection);
+		for (Chunk chunk : chunks) {
+			for (Voxel voxel : chunk.voxels()) {
+				voxel.setMat4("view", view);
+				voxel.setMat4("projection", projection);
 
-			voxel.update();
-			voxel.draw();
+				voxel.update();
+				voxel.draw();
+			}
 		}
 
 		glfwSwapBuffers(window);
@@ -103,8 +106,6 @@ int main(void) {
 	}
 
 	glfwTerminate();
-
-	delete chunk;
 
 	return 0;
 }
