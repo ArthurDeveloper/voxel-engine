@@ -14,6 +14,7 @@
 #include "VBO.h"
 #include "EBO.h"
 #include "Texture.h"
+#include "Chunk.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -21,9 +22,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
-
-#define DB_PERLIN_IMPL
-#include "db_perlin.hpp"
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -37,17 +35,16 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 glm::vec3 viewPosition = glm::vec3(0.0f, 0.0f, -3.0f);
 
+Chunk *chunk;
+
 // Relative to mouse
 GLfloat lastX = (GLfloat)WINDOW_WIDTH/2, lastY = (GLfloat)WINDOW_HEIGHT/2;
 GLfloat sensitivity = 0.1f;
-
-std::list<Voxel> voxels;
 
 void handleInputs(GLFWwindow *window);
 void mouseCallback(GLFWwindow *window, GLdouble ax, GLdouble ay);
 
 int main(void) {
-	srand(time(0));
 
 	if (glfwInit()) {
 		std::cout << "Glfw workin'!\n";
@@ -72,22 +69,7 @@ int main(void) {
 	}
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	GLfloat frequency = 0.05f;
-	for (int x = 0; x < 2; x++) {
-		for (int y = 0; y < 2; y++) {
-			for (int z = 0; z < 2; z++) {
-				Voxel v;
-				GLfloat noise = db::perlin(x * frequency, y * frequency, z * frequency);
-				std::cout << noise << std::endl;
-				if (noise < 0.05 && noise > 0.01) noise = -1;
-				else if (noise > 0.05) noise = 1;
-				else noise = 0;
-				
-				v.translate(x + noise, y + noise, z + noise);
-				voxels.push_back(v);
-			}
-		}
-	}
+	chunk = new Chunk(64);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -107,7 +89,7 @@ int main(void) {
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
 
-		for (Voxel voxel : voxels) {
+		for (Voxel voxel : chunk->voxels()) {
 			voxel.setMat4("view", view);
 			voxel.setMat4("projection", projection);
 
@@ -121,6 +103,8 @@ int main(void) {
 	}
 
 	glfwTerminate();
+
+	delete chunk;
 
 	return 0;
 }
