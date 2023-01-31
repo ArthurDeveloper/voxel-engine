@@ -70,16 +70,22 @@ int main(void) {
 	}
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	chunks.push_back(Chunk(1024));
-	chunks.push_back(Chunk(1024, glm::vec3(10.0f, 10.0f, 10.0f)));
+	chunks.push_back(Chunk(64));
 
 	glEnable(GL_DEPTH_TEST);
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouseCallback);
 	
+	int chunk_amount = 50;
+	double chunk_offset = 0;
 	while (!glfwWindowShouldClose(window)) {
 		handleInputs(window);
+
+		if (chunks.size() < chunk_amount) {
+			chunks.push_back(Chunk(64, glm::vec3(chunk_offset, 0, chunk_offset)));
+			chunk_offset += cbrt(64);
+		}
 
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
