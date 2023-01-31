@@ -1,5 +1,9 @@
 #include "Voxel.h"
+#include "Texture.h"
 #include "glm/ext/matrix_transform.hpp"
+
+Texture *Voxel::texture = nullptr;
+bool Voxel::textureHasBeenInstantiated = false;
 
 Voxel::Voxel() : vertices {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -43,7 +47,7 @@ Voxel::Voxel() : vertices {
 		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-	}, texture("res/textures/grass-top.png")
+	}
 {
 	vao.bind();
 
@@ -53,9 +57,7 @@ Voxel::Voxel() : vertices {
 	vao.attribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
 	vao.attribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
-	texture.bind();
-	texture.params();
-	texture.build();
+	initTexture();
 
 	shader.fromFile(GL_VERTEX_SHADER, "res/shaders/triangle.vert");
 	shader.fromFile(GL_FRAGMENT_SHADER, "res/shaders/triangle.frag");
@@ -70,7 +72,7 @@ void Voxel::update() {
 
 	glActiveTexture(GL_TEXTURE0);
 	
-	texture.bind();
+	texture->bind();
 	shader.use();
 
 	GLuint modelLocation = glGetUniformLocation(shader.program(), "model");
@@ -89,4 +91,14 @@ void Voxel::setMat4(const char *name, glm::mat4 value) {
 void Voxel::translate(float x, float y, float z) {
 	glm::vec3 vec = glm::vec3(x, y, z);
 	model = glm::translate(model, vec);
+}
+
+void Voxel::initTexture() {
+	if (!Voxel::textureHasBeenInstantiated) {
+		texture = new Texture("res/textures/grass-top.png");
+		texture->bind();
+		texture->params();
+		texture->build();
+		textureHasBeenInstantiated = true;
+	}
 }
