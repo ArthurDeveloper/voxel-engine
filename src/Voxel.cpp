@@ -95,7 +95,7 @@ void Voxel::translate(float x, float y, float z) {
 
 void Voxel::initTexture() {
 	if (!Voxel::textureHasBeenInstantiated) {
-		texture = new Texture("res/textures/grass-top.png");
+		texture = new Texture("res/textures/grass.png");
 		texture->bind();
 		texture->params();
 		texture->build();
