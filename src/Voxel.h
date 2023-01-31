@@ -17,7 +17,6 @@ private:
     VBO vbo;
     
     Shader shader;
-    Texture texture;
 
     glm::mat4 model;
 
@@ -26,6 +25,10 @@ public:
 
     void update();
     void draw();
+
+    static Texture *texture;
+    static bool textureHasBeenInstantiated;
+    static void initTexture();
 
     void translate(float x, float y, float z);
 

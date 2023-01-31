@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Texture.h"
 #include "Voxel.h"
 #include "glm/ext/vector_float3.hpp"
 #include <list>
