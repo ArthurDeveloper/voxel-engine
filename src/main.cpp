@@ -106,7 +106,6 @@ int main(void) {
 		glfwPollEvents();
 	}
 
-	delete Voxel::texture;
 	glfwTerminate();
 
 	return 0;

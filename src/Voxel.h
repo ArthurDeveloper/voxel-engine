@@ -16,12 +16,6 @@ private:
 
     glm::mat4 model;
 
-public:
-    Voxel();
-
-    void update();
-    void draw();
-
     static Texture *texture;
     static bool textureHasBeenInstantiated;
     static void initTexture();
@@ -29,6 +23,12 @@ public:
     static Shader *shader;
     static bool shaderHasBeenInitialized;
     static void initShader();
+
+public:
+    Voxel();
+
+    void update();
+    void draw();
 
     void translate(float x, float y, float z);
 
