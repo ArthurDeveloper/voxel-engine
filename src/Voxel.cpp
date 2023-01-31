@@ -5,6 +5,9 @@
 Texture *Voxel::texture = nullptr;
 bool Voxel::textureHasBeenInstantiated = false;
 
+Shader *Voxel::shader = nullptr;
+bool Voxel::shaderHasBeenInitialized = false;
+
 Voxel::Voxel()
 {
 	vao.bind();
@@ -60,11 +63,7 @@ Voxel::Voxel()
 	vao.attribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
 	initTexture();
-
-	shader.fromFile(GL_VERTEX_SHADER, "res/shaders/triangle.vert");
-	shader.fromFile(GL_FRAGMENT_SHADER, "res/shaders/triangle.frag");
-
-	shader.link();
+	initShader();
 
 	model = glm::mat4(1.0f);
 }
@@ -75,9 +74,9 @@ void Voxel::update() {
 	glActiveTexture(GL_TEXTURE0);
 	
 	texture->bind();
-	shader.use();
+	shader->use();
 
-	GLuint modelLocation = glGetUniformLocation(shader.program(), "model");
+	GLuint modelLocation = glGetUniformLocation(shader->program(), "model");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 }
 
@@ -86,7 +85,7 @@ void Voxel::draw() {
 }
 
 void Voxel::setMat4(const char *name, glm::mat4 value) {
-	GLuint location = glGetUniformLocation(shader.program(), name);
+	GLuint location = glGetUniformLocation(shader->program(), name);
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
@@ -102,5 +101,15 @@ void Voxel::initTexture() {
 		texture->params();
 		texture->build();
 		textureHasBeenInstantiated = true;
+	}
+}
+
+void Voxel::initShader() {
+	if (!Voxel::shaderHasBeenInitialized) {
+		shader = new Shader();
+
+		shader->fromFile(GL_VERTEX_SHADER, "res/shaders/triangle.vert");
+		shader->fromFile(GL_FRAGMENT_SHADER, "res/shaders/triangle.frag");
+		shader->link();
 	}
 }
