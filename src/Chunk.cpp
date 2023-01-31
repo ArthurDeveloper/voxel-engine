@@ -1,7 +1,5 @@
 #include "Chunk.h"
-
-#define DB_PERLIN_IMPL
-#include "db_perlin.hpp"
+#include "util/noise.h"
 
 Chunk::Chunk(int size) : voxels_() {
     int cubeRoot = cbrt(size);
@@ -11,8 +9,7 @@ Chunk::Chunk(int size) : voxels_() {
 		for (int y = 0; y < cubeRoot; y++) {
 			for (int z = 0; z < cubeRoot; z++) {
 				Voxel v;
-				GLfloat noise = db::perlin(x * frequency, y * frequency, z * frequency);
-				std::cout << noise << std::endl;
+				GLfloat noise = noise::calculate3d(x, y, z, frequency);
 				if (noise < 0.1) noise = -1;
 				else if (noise > 0.15) noise = 1;
 				else noise = 0;
@@ -22,6 +19,7 @@ Chunk::Chunk(int size) : voxels_() {
 			}
 		}
 	}
+	noise::reseed();
 }
 
 Chunk::Chunk(int size, glm::vec3 offset) : voxels_() {
@@ -32,9 +30,9 @@ Chunk::Chunk(int size, glm::vec3 offset) : voxels_() {
 		for (int y = 0; y < cubeRoot; y++) {
 			for (int z = 0; z < cubeRoot; z++) {
 				Voxel v;
-				GLfloat noise = db::perlin(x * frequency, y * frequency, z * frequency);
+				GLfloat noise = noise::calculate3d(x, y, z, frequency);
 				std::cout << noise << std::endl;
-				if (noise < 0.1) noise = -1;
+				if (noise < 0.01) noise = -1;
 				else if (noise > 0.15) noise = 1;
 				else noise = 0;
 
@@ -43,6 +41,7 @@ Chunk::Chunk(int size, glm::vec3 offset) : voxels_() {
 			}
 		}
 	}
+	noise::reseed();
 }
 
 const std::list<Voxel> Chunk::voxels() {
