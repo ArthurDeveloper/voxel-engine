@@ -13,8 +13,6 @@ class Voxel {
 private:
     VAO vao;
     VBO vbo;
-    
-    Shader shader;
 
     glm::mat4 model;
 
@@ -27,6 +25,10 @@ public:
     static Texture *texture;
     static bool textureHasBeenInstantiated;
     static void initTexture();
+
+    static Shader *shader;
+    static bool shaderHasBeenInitialized;
+    static void initShader();
 
     void translate(float x, float y, float z);
 
