@@ -69,8 +69,7 @@ int main(void) {
 	}
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	chunks.push_back(Chunk(64));
-	chunks.push_back(Chunk(64, glm::vec3(10.0f, 10.0f, 10.0f)));
+	chunks.push_back(Chunk(32));
 
 	glEnable(GL_DEPTH_TEST);
 
