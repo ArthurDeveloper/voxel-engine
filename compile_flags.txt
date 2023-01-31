@@ -1,3 +1,4 @@
 -Idependencies/include
 -Wall
 -xc++
+-std=c++17
