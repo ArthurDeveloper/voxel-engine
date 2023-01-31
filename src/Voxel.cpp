@@ -5,7 +5,11 @@
 Texture *Voxel::texture = nullptr;
 bool Voxel::textureHasBeenInstantiated = false;
 
-Voxel::Voxel() : vertices {
+Voxel::Voxel()
+{
+	vao.bind();
+
+	GLfloat vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
 		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -47,9 +51,7 @@ Voxel::Voxel() : vertices {
 		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-	}
-{
-	vao.bind();
+	};
 
 	vbo.bind();
 	vbo.bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);

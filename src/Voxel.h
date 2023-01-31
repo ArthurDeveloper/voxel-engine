@@ -11,8 +11,6 @@
 
 class Voxel {
 private:
-    GLfloat vertices[5 * 6 * 6];
-
     VAO vao;
     VBO vbo;
     
