@@ -113,3 +113,11 @@ void Voxel::initShader() {
 		shader->link();
 	}
 }
+
+void Voxel::destroyTexture() {
+	delete texture;
+}
+
+void Voxel::destroyShader() {
+	delete shader;
+}
