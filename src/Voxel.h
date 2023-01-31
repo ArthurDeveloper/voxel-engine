@@ -27,6 +27,9 @@ private:
 public:
     Voxel();
 
+    static void destroyTexture();
+    static void destroyShader();
+
     void update();
     void draw();
 

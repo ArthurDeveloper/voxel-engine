@@ -106,6 +106,9 @@ int main(void) {
 		glfwPollEvents();
 	}
 
+	Voxel::destroyTexture();
+	Voxel::destroyShader();
+
 	glfwTerminate();
 
 	return 0;
