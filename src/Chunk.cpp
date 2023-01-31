@@ -13,10 +13,10 @@ Chunk::Chunk(int size) : voxels_() {
 				Voxel v;
 				GLfloat noise = db::perlin(x * frequency, y * frequency, z * frequency);
 				std::cout << noise << std::endl;
-				if (noise < 0.05 && noise > 0.01) noise = -1;
-				else if (noise > 0.05) noise = 1;
+				if (noise < 0.1) noise = -1;
+				else if (noise > 0.15) noise = 1;
 				else noise = 0;
-				
+
 				v.translate(x + noise, y + noise, z + noise);
 				voxels_.push_back(v);
 			}
@@ -34,9 +34,6 @@ Chunk::Chunk(int size, glm::vec3 offset) : voxels_() {
 				Voxel v;
 				GLfloat noise = db::perlin(x * frequency, y * frequency, z * frequency);
 				std::cout << noise << std::endl;
-				if (noise < 0.05 && noise > 0.01) noise = -1;
-				else if (noise > 0.05) noise = 1;
-				else noise = 0;
 				
 				v.translate(x + offset.x + noise, y + offset.y + noise, z + offset.z + noise);
 				voxels_.push_back(v);
