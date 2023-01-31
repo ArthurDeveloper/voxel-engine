@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <initializer_list>
@@ -69,7 +70,8 @@ int main(void) {
 	}
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	chunks.push_back(Chunk(4096));
+	chunks.push_back(Chunk(1024));
+	chunks.push_back(Chunk(1024, glm::vec3(10.0f, 10.0f, 10.0f)));
 
 	glEnable(GL_DEPTH_TEST);
 
