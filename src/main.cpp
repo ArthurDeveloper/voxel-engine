@@ -63,7 +63,7 @@ int main(void) {
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-
+	
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cerr << "Error while loading glad." << std::endl;
 		glfwTerminate();
@@ -79,9 +79,6 @@ int main(void) {
 	glfwSetCursorPosCallback(window, mouseCallback);
 	
 	int chunk_amount = 70;
-	
-	int chunk_batches = chunk_amount/10;
-	int current_batch = 0;
 	
 	// TODO: Implement a batch-based rendering
 	for (int x = 0; x < sqrt(chunk_amount); x++) {

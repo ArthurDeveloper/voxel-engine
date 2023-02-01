@@ -1,16 +1,16 @@
 #include "Voxel.h"
-#include "Texture.h"
-#include "glm/ext/matrix_transform.hpp"
 
 Texture *Voxel::texture = nullptr;
 bool Voxel::textureHasBeenInstantiated = false;
 
 Shader *Voxel::shader = nullptr;
-bool Voxel::shaderHasBeenInitialized = false;
+bool Voxel::shaderHasBeenInstantiated = false;
+
+VAO *Voxel::vao = nullptr;
+bool Voxel::vaoHasBeenInstantiated = false;
 
 Voxel::Voxel()
 {
-	vao.bind();
 
 	GLfloat vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -59,9 +59,7 @@ Voxel::Voxel()
 	vbo.bind();
 	vbo.bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
 
-	vao.attribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
-	vao.attribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-
+	initVAO();
 	initTexture();
 	initShader();
 
@@ -69,7 +67,7 @@ Voxel::Voxel()
 }
 
 void Voxel::update() {
-	vao.bind();
+	vao->bind();
 
 	glActiveTexture(GL_TEXTURE0);
 	
@@ -105,12 +103,24 @@ void Voxel::initTexture() {
 }
 
 void Voxel::initShader() {
-	if (!Voxel::shaderHasBeenInitialized) {
+	if (!Voxel::shaderHasBeenInstantiated) {
 		shader = new Shader();
 
 		shader->fromFile(GL_VERTEX_SHADER, "res/shaders/triangle.vert");
 		shader->fromFile(GL_FRAGMENT_SHADER, "res/shaders/triangle.frag");
 		shader->link();
+		
+	}
+}
+
+void Voxel::initVAO() {
+	if (!Voxel::vaoHasBeenInstantiated) {
+		vao = new VAO();
+
+		vao->bind();
+		vao->attribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
+		vao->attribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		vaoHasBeenInstantiated = true;
 	}
 }
 
@@ -120,4 +130,8 @@ void Voxel::destroyTexture() {
 
 void Voxel::destroyShader() {
 	delete shader;
+}
+
+void Voxel::destroyVAO() {
+	delete vao;
 }
