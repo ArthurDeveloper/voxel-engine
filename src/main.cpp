@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <cstring>
+#include <math.h>
 #include <sstream>
 #include <fstream>
 #include <glm/ext/matrix_float4x4.hpp>
@@ -77,14 +78,23 @@ int main(void) {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouseCallback);
 	
-	int chunk_amount = 50;
-	double chunk_offset = 0;
+	int chunk_amount = 70;
+	
+	int chunk_batches = chunk_amount/10;
+	int current_batch = 0;
+	
+	// TODO: Implement a batch-based rendering
+	for (int x = 0; x < sqrt(chunk_amount); x++) {
+		for (int z = 0; z < sqrt(chunk_amount); z++) {
+			chunks.push_back(Chunk(64, glm::vec3(x, 0, z)));
+		}
+	}
+
 	while (!glfwWindowShouldClose(window)) {
 		handleInputs(window);
 
 		if (chunks.size() < chunk_amount) {
-			chunks.push_back(Chunk(64, glm::vec3(chunk_offset, 0, chunk_offset)));
-			chunk_offset += cbrt(64);
+			
 		}
 
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
