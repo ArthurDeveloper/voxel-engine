@@ -63,7 +63,7 @@ int main(void) {
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cerr << "Error while loading glad." << std::endl;
 		glfwTerminate();
@@ -80,7 +80,6 @@ int main(void) {
 	
 	int chunk_amount = 70;
 	
-	// TODO: Implement a batch-based rendering
 	for (int x = 0; x < sqrt(chunk_amount); x++) {
 		for (int z = 0; z < sqrt(chunk_amount); z++) {
 			chunks.push_back(Chunk(64, glm::vec3(x, 0, z)));
@@ -91,7 +90,7 @@ int main(void) {
 		handleInputs(window);
 
 		if (chunks.size() < chunk_amount) {
-			
+
 		}
 
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
@@ -121,6 +120,7 @@ int main(void) {
 
 	Voxel::destroyTexture();
 	Voxel::destroyShader();
+	Voxel::destroyVAO();
 
 	glfwTerminate();
 
