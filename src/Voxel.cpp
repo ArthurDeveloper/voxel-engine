@@ -109,7 +109,7 @@ void Voxel::initShader() {
 		shader->fromFile(GL_VERTEX_SHADER, "res/shaders/triangle.vert");
 		shader->fromFile(GL_FRAGMENT_SHADER, "res/shaders/triangle.frag");
 		shader->link();
-		
+		shaderHasBeenInstantiated = true;
 	}
 }
 
