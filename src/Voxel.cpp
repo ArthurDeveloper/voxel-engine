@@ -1,4 +1,5 @@
 #include "Voxel.h"
+#include "Texture.h"
 
 Texture *Voxel::texture = nullptr;
 bool Voxel::textureHasBeenInstantiated = false;
@@ -67,13 +68,6 @@ Voxel::Voxel()
 }
 
 void Voxel::update() {
-	vao->bind();
-
-	glActiveTexture(GL_TEXTURE0);
-	
-	texture->bind();
-	shader->use();
-
 	GLuint modelLocation = glGetUniformLocation(shader->program(), "model");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 }
@@ -122,6 +116,19 @@ void Voxel::initVAO() {
 		vao->attribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 		vaoHasBeenInstantiated = true;
 	}
+}
+
+void Voxel::bindVAO() {
+	vao->bind();
+}
+
+void Voxel::bindTexture() {
+	glActiveTexture(GL_TEXTURE0);
+	texture->bind();
+}
+
+void Voxel::useShader() {
+	shader->use();
 }
 
 void Voxel::destroyTexture() {

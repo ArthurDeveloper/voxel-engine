@@ -31,6 +31,10 @@ private:
 public:
     Voxel();
 
+    static void bindVAO();
+    static void bindTexture();
+    static void useShader();
+
     static void destroyTexture();
     static void destroyShader();
     static void destroyVAO();

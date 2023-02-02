@@ -78,7 +78,7 @@ int main(void) {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouseCallback);
 	
-	int chunk_amount = 70;
+	int chunk_amount = 500;
 	
 	for (int x = 0; x < sqrt(chunk_amount); x++) {
 		for (int z = 0; z < sqrt(chunk_amount); z++) {
@@ -103,6 +103,9 @@ int main(void) {
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
 
+		Voxel::bindVAO();
+		Voxel::bindTexture();
+		Voxel::useShader();
 		for (Chunk chunk : chunks) {
 			for (Voxel voxel : chunk.voxels()) {
 				voxel.setMat4("view", view);
