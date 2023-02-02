@@ -11,14 +11,16 @@
 #include "shader.h"
 
 class Voxel {
-private:
-    VBO vbo;
-
+private:    
     glm::mat4 model;
 
     static VAO *vao;
     static bool vaoHasBeenInstantiated;
     static void initVAO();
+
+    static VBO *vbo;
+    static bool vboHasBeenInstantiated;
+    static void initVBO();
 
     static Texture *texture;
     static bool textureHasBeenInstantiated;
@@ -38,6 +40,7 @@ public:
     static void destroyTexture();
     static void destroyShader();
     static void destroyVAO();
+    static void destroyVBO();
 
     void update();
     void draw();

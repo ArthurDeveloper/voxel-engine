@@ -10,6 +10,9 @@ bool Voxel::shaderHasBeenInstantiated = false;
 VAO *Voxel::vao = nullptr;
 bool Voxel::vaoHasBeenInstantiated = false;
 
+VBO *Voxel::vbo = nullptr;
+bool Voxel::vboHasBeenInstantiated = false;
+
 Voxel::Voxel()
 {
 
@@ -57,8 +60,8 @@ Voxel::Voxel()
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 
-	vbo.bind();
-	vbo.bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+	initVBO();
+	vbo->bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
 
 	initVAO();
 	initTexture();
@@ -118,6 +121,14 @@ void Voxel::initVAO() {
 	}
 }
 
+void Voxel::initVBO() {
+	if (!Voxel::vboHasBeenInstantiated) {
+		vbo = new VBO();
+		vbo->bind();
+		vboHasBeenInstantiated = true;
+	}
+}
+
 void Voxel::bindVAO() {
 	vao->bind();
 }
@@ -141,4 +152,8 @@ void Voxel::destroyShader() {
 
 void Voxel::destroyVAO() {
 	delete vao;
+}
+
+void Voxel::destroyVBO() {
+	delete vbo;
 }

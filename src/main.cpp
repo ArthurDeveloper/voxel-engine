@@ -120,6 +120,7 @@ int main(void) {
 	Voxel::destroyTexture();
 	Voxel::destroyShader();
 	Voxel::destroyVAO();
+	Voxel::destroyVBO();
 
 	glfwTerminate();
 
