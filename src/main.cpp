@@ -89,13 +89,14 @@ int main(void) {
 	glm::mat4 projection;
 	projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
 
+	glm::mat4 view = glm::mat4(1.0f);
+
 	while (!glfwWindowShouldClose(window)) {
 		handleInputs(window);
 
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::mat4 view = glm::mat4(1.0f);
 		view = glm::lookAt(viewPosition, viewPosition + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
 
 		Voxel::bindVAO();
