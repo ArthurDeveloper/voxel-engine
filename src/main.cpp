@@ -92,17 +92,11 @@ int main(void) {
 	while (!glfwWindowShouldClose(window)) {
 		handleInputs(window);
 
-		if (chunks.size() < chunk_amount) {
-
-		}
-
 		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 view = glm::mat4(1.0f);
 		view = glm::lookAt(viewPosition, viewPosition + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
-		
-		// TODO: Put this outside of the loop to improve performance
 
 		Voxel::bindVAO();
 		Voxel::bindTexture();
