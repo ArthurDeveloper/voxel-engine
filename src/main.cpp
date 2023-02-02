@@ -94,9 +94,6 @@ int main(void) {
 	while (!glfwWindowShouldClose(window)) {
 		handleInputs(window);
 
-		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		view = glm::lookAt(viewPosition, viewPosition + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
 
 		Voxel::bindVAO();
@@ -113,6 +110,9 @@ int main(void) {
 		}
 
 		glfwSwapBuffers(window);
+
+		glClearColor(0, 120.f/255.f, 255.f/255.f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glfwPollEvents();
 	}
