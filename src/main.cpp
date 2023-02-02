@@ -86,6 +86,9 @@ int main(void) {
 		}
 	}
 
+	glm::mat4 projection;
+	projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
+
 	while (!glfwWindowShouldClose(window)) {
 		handleInputs(window);
 
@@ -100,8 +103,6 @@ int main(void) {
 		view = glm::lookAt(viewPosition, viewPosition + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
 		
 		// TODO: Put this outside of the loop to improve performance
-		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.f), 640.f/480.f, 0.1f, 100.f);
 
 		Voxel::bindVAO();
 		Voxel::bindTexture();
